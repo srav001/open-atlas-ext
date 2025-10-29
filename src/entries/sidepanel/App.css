@@ -1,6 +1,14 @@
+@import 'tailwindcss';
+
 :root {
 	color-scheme: light dark;
-	font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	font-family:
+		'Inter',
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		sans-serif;
 	font-size: 14px;
 	line-height: 1.4;
 }
@@ -151,7 +159,9 @@ body {
 	padding: 8px 18px;
 	font-weight: 600;
 	cursor: pointer;
-	transition: transform 150ms ease, opacity 150ms ease;
+	transition:
+		transform 150ms ease,
+		opacity 150ms ease;
 }
 
 .panel__composer button:hover {

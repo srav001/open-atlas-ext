@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
@@ -12,7 +13,7 @@ const input = {
 };
 
 export default defineConfig({
-	plugins: [solid()],
+	plugins: [solid(), tailwindcss()],
 	build: {
 		outDir: 'dist',
 		emptyOutDir: true,

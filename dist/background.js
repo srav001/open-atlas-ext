@@ -1,2 +1,0 @@
-chrome.runtime.onInstalled.addListener(async()=>{if(chrome.sidePanel)try{await chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:!0})}catch(e){console.error(`Failed to configure side panel behavior`,e)}}),chrome.action.onClicked.addListener(async e=>{if(!chrome.sidePanel)return;let t=e.windowId;if(typeof t==`number`)try{await chrome.sidePanel.open({windowId:t})}catch(e){console.error(`Failed to open side panel`,e)}});
-//# sourceMappingURL=background.js.map

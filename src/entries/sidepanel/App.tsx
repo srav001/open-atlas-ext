@@ -1,5 +1,5 @@
-import { For, createSignal } from 'solid-js';
 import type { JSX } from 'solid-js';
+import { For, createSignal } from 'solid-js';
 import './App.css';
 
 type Participant = 'assistant' | 'user';
@@ -24,12 +24,12 @@ const starterMessages: Message[] = [
 ];
 
 function SidePanelApp(): JSX.Element {
-	const [messages, setMessages] = createSignal<Message[]>(starterMessages);
-	const [draft, setDraft] = createSignal('');
+	const [getMessages, setMessages] = createSignal<Message[]>(starterMessages);
+	const [getDraft, setDraft] = createSignal('');
 
 	function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
-		const text = draft().trim();
+		const text = getDraft().trim();
 
 		if (!text) {
 			return;
@@ -53,13 +53,13 @@ function SidePanelApp(): JSX.Element {
 			<header class="panel__header">
 				<div class="panel__title">
 					<span class="panel__badge">Alpha</span>
-					<h1>Open Atlas Assistant</h1>
+					<h1 class="text-red-500">Open Atlas Assistant</h1>
 				</div>
 				<p>Future AI capabilities will appear here. Use this scaffold to preview layout and styling.</p>
 			</header>
 
 			<section class="panel__messages" aria-live="polite" aria-label="Conversation preview">
-				<For each={messages()}>
+				<For each={getMessages()}>
 					{(message) => (
 						<article class={`message message--${message.author}`}>
 							<span class="message__author">{message.author === 'assistant' ? 'Assistant' : 'You'}</span>
@@ -73,7 +73,7 @@ function SidePanelApp(): JSX.Element {
 				<textarea
 					name="draft"
 					placeholder="Type a prompt…"
-					value={draft()}
+					value={getDraft()}
 					onInput={(event) => setDraft(event.currentTarget.value)}
 					rows={3}
 					aria-label="Message draft"

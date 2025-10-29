@@ -19,11 +19,13 @@
 		"solid-js": "^1.9.9"
 	},
 	"devDependencies": {
+		"@tailwindcss/vite": "^4.1.16",
 		"@types/chrome": "^0.1.27",
 		"@types/node": "^24.6.0",
 		"prettier": "^3.6.2",
 		"prettier-plugin-organize-imports": "^4.1.0",
 		"prettier-plugin-tailwindcss": "^0.7.0",
+		"tailwindcss": "^4.1.16",
 		"typescript": "~5.9.3",
 		"vite": "npm:rolldown-vite@latest",
 		"vite-plugin-solid": "^2.11.8"
