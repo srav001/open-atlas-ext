@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import { For, createSignal } from 'solid-js';
+import { For, createSignal, onCleanup, onMount } from 'solid-js';
 
 type Participant = 'assistant' | 'user';
 
@@ -23,8 +23,37 @@ const starterMessages: Message[] = [
 ];
 
 function SidePanelApp(): JSX.Element {
+	const defaultScheme: 'light' | 'dark' =
+		typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: light)').matches
+			? 'light'
+			: 'dark';
 	const [getMessages, setMessages] = createSignal<Message[]>(starterMessages);
 	const [getDraft, setDraft] = createSignal('');
+	const [getScheme, setScheme] = createSignal<'light' | 'dark'>(defaultScheme);
+
+	onMount(() => {
+		if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+			return;
+		}
+
+		const media = window.matchMedia('(prefers-color-scheme: light)');
+		const applyScheme = (target: MediaQueryList | MediaQueryListEvent) => {
+			const matches = 'matches' in target ? target.matches : media.matches;
+			setScheme(matches ? 'light' : 'dark');
+		};
+
+		const listener = (event: MediaQueryListEvent) => applyScheme(event);
+
+		applyScheme(media);
+
+		if (typeof media.addEventListener === 'function') {
+			media.addEventListener('change', listener);
+			onCleanup(() => media.removeEventListener('change', listener));
+		} else if (typeof media.addListener === 'function') {
+			media.addListener(listener);
+			onCleanup(() => media.removeListener(listener));
+		}
+	});
 
 	function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
@@ -48,15 +77,18 @@ function SidePanelApp(): JSX.Element {
 	}
 
 	return (
-		<div class="glass-shell flex h-screen flex-col gap-6 p-6 text-slate-100 scheme-dark">
-			<header class="flex flex-col gap-3 text-slate-200">
+		<div
+			class="glass-shell flex h-screen flex-col gap-6 p-6"
+			classList={{
+				'scheme-light': getScheme() === 'light',
+				'scheme-dark': getScheme() === 'dark'
+			}}>
+			<header class="flex flex-col gap-3">
 				<div class="flex items-center gap-3">
 					<span class="badge-alpha">Alpha</span>
-					<h1 class="text-xl font-semibold text-slate-50 drop-shadow-[0_2px_6px_rgba(15,23,42,0.55)]">
-						Open Atlas Assistant
-					</h1>
+					<h1 class="panel-title text-xl font-semibold">Open Atlas Assistant</h1>
 				</div>
-				<p class="max-w-[92%] text-sm leading-relaxed text-slate-200/85">
+				<p class="panel-subtitle max-w-[92%] text-sm leading-relaxed">
 					Future AI capabilities will appear here. Use this scaffold to preview layout and styling.
 				</p>
 			</header>
@@ -73,10 +105,10 @@ function SidePanelApp(): JSX.Element {
 								'glass-message--assistant': message.author === 'assistant',
 								'glass-message--user': message.author === 'user'
 							}}>
-							<span class="text-[0.62rem] font-semibold tracking-[0.24em] text-slate-200/85 uppercase">
+							<span class="message-label text-[0.62rem] font-semibold tracking-[0.24em] uppercase">
 								{message.author === 'assistant' ? 'Assistant' : 'You'}
 							</span>
-							<p class="text-sm leading-relaxed text-slate-100/92">{message.body}</p>
+							<p class="message-copy text-sm leading-relaxed">{message.body}</p>
 						</article>
 					)}
 				</For>
